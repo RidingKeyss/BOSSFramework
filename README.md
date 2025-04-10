@@ -54,12 +54,15 @@ BehaviorRegistry.Start(npc, "Spin");
 
 ## 📁Project Structure
 
-Core.cs                - Initializes the framework and hooks into MelonLoader
-BehaviorRegistry.cs    - Manages registration, tracking, and stopping of behaviors
-CommonBehaviors.cs     - Example reusable behaviors (FollowNearestPlayer, Patrol, etc.)
-CommonActions.cs       - Modular coroutine actions (MoveTo, Wait, Say, etc.)
-BOSSUtils.cs           - Recursive transform search and renderer helpers
-LoadEvents.cs          - Harmony patches for map load/unload lifecycle
+| File                | Purpose                                                         |
+|---------------------|-----------------------------------------------------------------|
+| `Core.cs`           | Initializes the framework and hooks into MelonLoader            |
+| `BehaviorRegistry.cs` | Manages behavior registration, tracking, and stopping         |
+| `CommonBehaviors.cs` | Example reusable behaviors like `FollowNearestPlayer`          |
+| `CommonActions.cs`   | Coroutine helpers like `MoveTo`, `Wait`, `Say`                 |
+| `BOSSUtils.cs`       | Recursive transform search, logging, and renderer helpers      |
+| `LoadEvents.cs`      | Hooks into map load/unload via Harmony patching                |
+
 
 ## 🤝Contributing
 
