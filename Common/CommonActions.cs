@@ -70,35 +70,35 @@ namespace BOSSFramework
 
             float distance = Vector3.Distance(npc.transform.position, target.transform.position);
 
-                if (distance > followDistance)
-                {
-                    npc.Movement.SetDestination(target.transform.position);
-                    npc.Movement.ResumeMovement();
-                }
-                else if (npc.Movement.IsMoving)
-                {
-                    yield return null;
-                }
+            if (distance > followDistance)
+            {
+                npc.Movement.SetDestination(target.transform.position);
+                npc.Movement.ResumeMovement();
+            }
+            else if (npc.Movement.IsMoving)
+            {
+                yield return null;
+            }
 
-                yield return new WaitForSeconds(0.5f);
+            yield return new WaitForSeconds(0.5f);
         }
         public static IEnumerator FollowPlayer(NPC npc, Player target, float followDistance = 3f)
         {
             MelonLogger.Msg($"[BOSSFramework] {npc.name} is following {target.name}");
 
-                float distance = Vector3.Distance(npc.transform.position, target.transform.position);
+            float distance = Vector3.Distance(npc.transform.position, target.transform.position);
 
-                if (distance > followDistance)
-                {
-                    npc.Movement.SetDestination(target.transform.position);
-                    npc.Movement.ResumeMovement();
-                }
-                else if (npc.Movement.IsMoving)
-                {
-                    yield return null;
-                }
+            if (distance > followDistance)
+            {
+                npc.Movement.SetDestination(target.transform.position);
+                npc.Movement.ResumeMovement();
+            }
+            else if (npc.Movement.IsMoving)
+            {
+                yield return null;
+            }
 
-                yield return new WaitForSeconds(0.5f);
+            yield return new WaitForSeconds(0.5f);
         }
     }
 }

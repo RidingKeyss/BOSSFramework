@@ -1,11 +1,7 @@
 ﻿// BehaviorRegistry.cs
-using System;
 using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 using MelonLoader;
 using Il2CppScheduleOne.NPCs;
-using Il2CppScheduleOne.NPCs.Behaviour;
 
 namespace BOSSFramework
 {

@@ -1,10 +1,8 @@
 ﻿// BOSSFramework - Schedule I Custom NPC Behavior Modding Framework
 // Compatible with MelonLoader & Harmony - IL2CPP only
 
-using UnityEngine;
 using MelonLoader;
 using HarmonyLib;
-using Il2CppScheduleOne.NPCs;
 using Il2CppScheduleOne.Persistence;
 using Il2CppScheduleOne.DevUtilities;
 

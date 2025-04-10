@@ -21,7 +21,7 @@ namespace BOSSFramework
 
         public static IEnumerator FollowNearestNPC(NPC npc)
         {
-            var allNpcs = GameObject.FindObjectsOfType<NPC>();
+            var allNpcs = UnityEngine.Object.FindObjectsOfType<NPC>();
             NPC closest = null;
             float closestDist = float.MaxValue;
 
@@ -52,7 +52,7 @@ namespace BOSSFramework
 
         public static IEnumerator FollowNearestPlayer(NPC npc)
         {
-            var allPlayers = GameObject.FindObjectsOfType<Il2CppScheduleOne.PlayerScripts.Player>();
+            var allPlayers = UnityEngine.Object.FindObjectsOfType<Il2CppScheduleOne.PlayerScripts.Player>();
             Il2CppScheduleOne.PlayerScripts.Player closest = null;
             float closestDist = float.MaxValue;
 
