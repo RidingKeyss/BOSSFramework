@@ -61,7 +61,6 @@ BehaviorRegistry.Start(npc, "Spin");
 | `CommonBehaviors.cs` | Example reusable behaviors like `FollowNearestPlayer`          |
 | `CommonActions.cs`   | Coroutine helpers like `MoveTo`, `Wait`, `Say`                 |
 | `BOSSUtils.cs`       | Recursive transform search, logging, and renderer helpers      |
-| `LoadEvents.cs`      | Hooks into map load/unload via Harmony patching                |
 
 
 ## 🤝Contributing
