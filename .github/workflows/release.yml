@@ -5,6 +5,9 @@ on:
     tags:
       - 'v*'
 
+permissions:
+  contents: write
+
 jobs:
   release:
     name: Build Release Assets
@@ -18,7 +21,7 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           files: |
-            dist/BOSSFramework.dll
-            dist/BOSSFrameworkSource.zip
+            path/to/BOSSFramework.dll
+            path/to/BOSSFrameworkSource.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
