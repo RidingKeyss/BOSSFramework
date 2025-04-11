@@ -39,35 +39,93 @@ Mods/
 ├── BOSSCoreShared.dll
 ├── BOSSIl2Cpp.dll
 ```
+---
 
-### 2. Reference the framework in your own mod:
+## 👩‍💻 For Modders: Using BOSSFramework in Your Mod
+
+### ✅ 1. Add the Correct References
+Target **one** backend based on the Schedule I version you are modding for:
+
+- **Mono:** `BOSSCoreShared.dll` and `BOSSMono.dll`
+- **IL2CPP:** `BOSSCoreShared.dll` and `BOSSIl2Cpp.dll`
+
+> ⚠️ Do NOT reference both backend DLLs in the same project.
+
+### ✅ 2. Only Code Against Shared Interfaces
+Use the shared types provided by `BOSSCoreShared`:
 ```csharp
-using BOSSFramework;
+using BOSSCoreShared;
+using BOSSFramework.BehaviorTree;
+```
+Use `INPC`, `IPlayer`, `IBehavior`, and `BehaviorRegistry`. Let the framework handle the backend wiring.
+
+### ✅ 3. Avoid Backend Implementations
+Do **not** use or reference:
+- `MonoNPC`, `Il2CppNPC`
+- `MonoPlayer`, `Il2CppPlayer`
+- `MonoBehavior`, `Il2CppBehavior`
+
+Those are managed internally and are runtime-specific.
+
+### ✅ 4. Example Behavior Tree Usage
+```csharp
+public static class BTExampleTree
+{
+    public static BehaviorTree.BehaviorTree Create(INPC npc, IPlayer player)
+    {
+        var tree = new BehaviorTree.BehaviorTree(
+            SelectorNodeBuilder.Start()
+            // Sequence 1: Player is very close, engage
+            .WithSequence(
+                new IsPlayerNearCondition(6f),
+                new ConditionalTaskNode(
+                    new CooldownCondition("spotted", 6f),
+                    new SayTask("I see you...", 2f)
+                ),
+                SelectorNodeBuilder.Start()
+                    .WithSequence(
+                        new IsPlayerNearCondition(2f),
+                        new ConditionalTaskNode(
+                            new CooldownCondition("gotcha", 10f),
+                            new SayTask("Gotcha!", 2f)
+                        )
+                    )
+                    .WithSequence(
+                        new FollowPlayerTask(1f)
+                    )
+                    .Build()
+            )
+
+            // Sequence 2: Passive idle when player is somewhat close
+            .WithSequence(
+                new IsPlayerNearCondition(15f),
+                new ConditionalTaskNode(
+                    new CooldownCondition("chillin", 8f),
+                    new SayTask("Just hanging out", 2f)
+                ),
+                new WaitTask(0.5f)
+            )
+
+            // Sequence 3: Do nothing (pure idle)
+            .WithSequence(
+                new WaitTask(0.5f)
+            )
+
+            .Build()
+        );
+
+        tree.GetBlackboard().Set("Self", npc);
+        tree.GetBlackboard().Set("Player", player);
+
+        return tree;
+    }
+}
+
+// Applying it:
+BehaviorRegistry.Apply(npc, "MyTree", MyCustomTree.Create(npc, player));
 ```
 
-### 3. Creating a Custom Behavior Tree
-Behavior Trees use a fluent builder API to assemble logic via tasks, conditions, and composite structures.
-
-➡️ See `BTExampleTree.cs` for a working implementation.
-
-### 4. Applying and Removing Behavior Trees
-```csharp
-var npc = FindClosestNPCToPlayer();
-var player = GameObject.Find("Player_Local").GetComponent<Player>();
-
-var tree = BTExampleTree.Create(npc, player);
-BehaviorRegistry.Apply(npc, "FollowExampleTree", tree);
-```
-
-Remove a behavior:
-```csharp
-BehaviorRegistry.Remove(npc);
-```
-
-Remove all active behaviors:
-```csharp
-BehaviorRegistry.RemoveAll();
-```
+---
 
 ---
 
