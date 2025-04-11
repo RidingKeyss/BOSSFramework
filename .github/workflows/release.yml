@@ -17,10 +17,25 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v3
 
-      - name: Upload BOSSFramework.dll to release
+      - name: Create IL2CPP ZIP
+        run: |
+          mkdir -p release/il2cpp
+          copy dist\\BOSSIl2Cpp.dll release\\il2cpp\\BOSSIl2Cpp.dll
+          copy dist\\BOSSCoreShared.dll release\\il2cpp\\BOSSCoreShared.dll
+          powershell Compress-Archive -Path release\\il2cpp\\* -DestinationPath BOSSFramework_IL2CPP.zip
+
+      - name: Create MONO ZIP
+        run: |
+          mkdir -p release/mono
+          copy dist\\BOSSMono.dll release\\mono\\BOSSMono.dll
+          copy dist\\BOSSCoreShared.dll release\\mono\\BOSSCoreShared.dll
+          powershell Compress-Archive -Path release\\mono\\* -DestinationPath BOSSFramework_MONO.zip
+
+      - name: Upload release assets
         uses: softprops/action-gh-release@v1
         with:
           files: |
-            dist/BOSSFramework.dll
+            BOSSFramework_IL2CPP.zip
+            BOSSFramework_MONO.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
