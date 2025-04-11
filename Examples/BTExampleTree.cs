@@ -1,16 +1,15 @@
-﻿// BOSSFramework - BTExampleTree.cs
+﻿// BOSSFramework - Examples/BTExampleTree.cs
 // Example behavior tree using core Tasks and Nodes for testing
 
-using Il2CppScheduleOne.NPCs;
-using Il2CppScheduleOne.PlayerScripts;
 using BOSSFramework.BehaviorTree;
 using BOSSFramework.BehaviorTree.Tasks;
+using BOSSFramework.Shared;
 
-namespace BOSSFramework
+namespace BOSSFramework.Examples
 {
     public static class BTExampleTree
     {
-        public static BehaviorTree.BehaviorTree Create(NPC npc, Player player)
+        public static BehaviorTree.BehaviorTree Create(INPC npc, IPlayer player)
         {
             var tree = new BehaviorTree.BehaviorTree(
                 SelectorNodeBuilder.Start()

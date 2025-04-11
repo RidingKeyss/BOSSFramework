@@ -13,6 +13,10 @@
 		<LangVersion>latest</LangVersion>
 		<ImplicitUsings>enable</ImplicitUsings>
 	</PropertyGroup>
+	<ItemGroup>
+	  <EmbeddedResource Remove="dist\**" />
+	  <None Remove="dist\**" />
+	</ItemGroup>
 
 	<ItemGroup>
 		<Reference Include="Assembly-CSharp-firstpass">
@@ -462,15 +466,27 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+		<Compile Include="Backends\Il2Cpp\Il2CppBehavior.cs" />
+		<Compile Include="Backends\Il2Cpp\Il2CppDebugTools.cs" />
+		<Compile Include="Backends\Il2Cpp\Il2CppDialogueRenderer.cs" />
+		<Compile Include="Backends\Il2Cpp\Il2CppIdleTemplateProvider.cs" />
+		<Compile Include="Backends\Il2Cpp\Il2CppInitHooks.cs" />
+		<Compile Include="Backends\Il2Cpp\Il2CppNPC.cs" />
+		<Compile Include="Backends\Il2Cpp\Il2CppPlayer.cs" />
 		<Compile Include="BehaviorTree\BehaviorTree.cs" />
 		<Compile Include="BehaviorTree\BTBuilders.cs" />
 		<Compile Include="BehaviorTree\BTNodes.cs" />
 		<Compile Include="BehaviorTree\Tasks\BTConditions.cs" />
-		<Compile Include="Utils\BehaviorRegistry.cs" />
-		<Compile Include="Utils\BOSSUtils.cs" />
+		<Compile Include="Shared\BehaviorRegistry.cs" />
+		<Compile Include="Shared\BOSSUtils.cs" />
 		<Compile Include="BehaviorTree\Tasks\BTTasks.cs" />
 		<Compile Include="Examples\BTExampleTree.cs" />
 		<Compile Include="Core.cs" />
+		<Compile Include="Shared\Interfaces.cs" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="Backends\Mono\" />
 	</ItemGroup>
 	
 	<Target Name="PostBuild" AfterTargets="PostBuildEvent">

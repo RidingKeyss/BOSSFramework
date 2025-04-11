@@ -1,8 +1,7 @@
-﻿// BOSSFramework - BTNodes.cs
+﻿// BOSSFramework - BehaviorTree/BTNodes.cs
 // Defines node structures for creating modular, ticking behavior trees
 
 using System.Collections;
-using Il2CppScheduleOne.NPCs;
 
 namespace BOSSFramework.BehaviorTree
 {

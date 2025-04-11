@@ -2,17 +2,16 @@
 // Manages direct application and cleanup of BehaviorTree instances on NPCs
 
 using MelonLoader;
-using Il2CppScheduleOne.NPCs;
 
-namespace BOSSFramework
+namespace BOSSFramework.Shared
 {
     public static class BehaviorRegistry
     {
-        private static readonly Dictionary<NPC, BehaviorTree.BehaviorTree> _activeTrees = new();
-        private static readonly Dictionary<NPC, object> _activeCoroutines = new();
-        private static readonly Dictionary<NPC, Il2CppScheduleOne.NPCs.Behaviour.Behaviour> _activeBehaviours = new();
+        private static readonly Dictionary<INPC, BehaviorTree.BehaviorTree> _activeTrees = new();
+        private static readonly Dictionary<INPC, object> _activeCoroutines = new();
+        private static readonly Dictionary<INPC, IBehavior> _activeBehaviours = new();
 
-        public static void Apply(NPC npc, BehaviorTree.BehaviorTree tree, string name = "BOSS_Tree")
+        public static void Apply(INPC npc, BehaviorTree.BehaviorTree tree, string name = "BOSS_Tree")
         {
             if (npc == null || tree == null)
             {
@@ -20,7 +19,7 @@ namespace BOSSFramework
                 return;
             }
 
-            var template = npc.behaviour.activeBehaviour ?? BOSSUtils.IdleTemplate;
+            var template = npc.ActiveBehavior ?? BOSSUtils.IdleTemplate;
             if (template == null)
             {
                 MelonLogger.Error($"[BOSSFramework] Cannot apply behavior — no valid behavior template.");
@@ -29,20 +28,35 @@ namespace BOSSFramework
 
             PauseExistingBehaviours(npc);
 
-            var cloned = UnityEngine.Object.Instantiate(template);
-            cloned.name = name;
-            npc.behaviour.AddEnabledBehaviour(cloned);
-            npc.behaviour.activeBehaviour = cloned;
+            if (template == null)
+            {
+                MelonLogger.Warning("[BOSSFramework] Cannot apply behavior — IdleTemplate is null.");
+                return;
+            }
+
+            MelonLogger.Msg($"[BOSSFramework] Attempting to clone IdleTemplate of type: {template.GetType()}");
+
+
+            var unityTemplate = Backends.Il2Cpp.Il2CppBehavior.Unwrap(template);
+            if (unityTemplate == null)
+            {
+                MelonLogger.Error("[BOSSFramework] IdleTemplate could not be unwrapped to Unity object.");
+                return;
+            }
+            var cloned = new Backends.Il2Cpp.Il2CppBehavior(UnityEngine.Object.Instantiate(unityTemplate));
+            cloned.Name = name;
+            npc.AddEnabledBehavior(cloned);
+            npc.ActiveBehavior = cloned;
 
             var coroutine = MelonCoroutines.Start(tree.Run());
             _activeTrees[npc] = tree;
             _activeCoroutines[npc] = coroutine;
             _activeBehaviours[npc] = cloned;
 
-            MelonLogger.Msg($"[BOSSFramework] Applied behavior '{name}' to NPC: {npc.name}");
+            MelonLogger.Msg($"[BOSSFramework] Applied behavior '{name}' to NPC: {npc.Name}");
         }
 
-        public static void Remove(NPC npc)
+        public static void Remove(INPC npc)
         {
             if (npc == null) return;
 
@@ -61,12 +75,12 @@ namespace BOSSFramework
 
             if (_activeBehaviours.TryGetValue(npc, out var behaviour))
             {
-                npc.behaviour.RemoveEnabledBehaviour(behaviour);
+                npc.RemoveEnabledBehavior(behaviour);
                 _activeBehaviours.Remove(npc);
             }
 
             ResumeExistingBehaviours(npc);
-            MelonLogger.Msg($"[BOSSFramework] Removed behavior from NPC: {npc.name}");
+            MelonLogger.Msg($"[BOSSFramework] Removed behavior from NPC: {npc.Name}");
         }
 
         public static void RemoveAll()
@@ -78,9 +92,9 @@ namespace BOSSFramework
             MelonLogger.Msg("[BOSSFramework] Removed all active behavior trees.");
         }
 
-        public static void PauseExistingBehaviours(NPC npc)
+        public static void PauseExistingBehaviours(INPC npc)
         {
-            var existing = npc.behaviour.enabledBehaviours;
+            var existing = npc.EnabledBehaviors;
             foreach (var behaviour in existing)
             {
                 if (behaviour.Active)
@@ -88,35 +102,34 @@ namespace BOSSFramework
                     behaviour.Active = false;
                     behaviour.BehaviourUpdate();
                     if (npc.LocalConnection != null)
-                        behaviour.End_Networked(npc.LocalConnection);
+                        behaviour.EndNetworked(npc.LocalConnection);
 
-                    MelonLogger.Msg($"[BOSSFramework] Paused behaviour: {behaviour.name}");
+                    MelonLogger.Msg($"[BOSSFramework] Paused behaviour: {behaviour.Name}");
                 }
             }
         }
 
-        public static void ResumeExistingBehaviours(NPC npc)
+        public static void ResumeExistingBehaviours(INPC npc)
         {
-            var existing = npc.behaviour.enabledBehaviours;
+            var existing = npc.EnabledBehaviors;
             foreach (var behaviour in existing)
             {
                 if (!behaviour.Active)
                 {
                     behaviour.Active = true;
-                    behaviour.BehaviourUpdate();
                     if (npc.LocalConnection != null)
                     {
-                        behaviour.Enable_Networked(npc.LocalConnection);
-                        behaviour.Begin_Networked(npc.LocalConnection);
+                        behaviour.EnableNetworked(npc.LocalConnection);
+                        behaviour.BeginNetworked(npc.LocalConnection);
                     }
-                    MelonLogger.Msg($"[BOSSFramework] Resumed behaviour: {behaviour.name}");
+                    MelonLogger.Msg($"[BOSSFramework] Resumed behaviour: {behaviour.Name}");
                 }
             }
 
             if (existing.Count > 0)
             {
-                npc.behaviour.activeBehaviour = existing[0];
-                MelonLogger.Msg($"[BOSSFramework] Set activeBehaviour to: {existing[0]?.name}");
+                npc.ActiveBehavior = existing[0];
+                MelonLogger.Msg($"[BOSSFramework] Set activeBehaviour to: {existing[0]?.Name}");
             }
         }
     }

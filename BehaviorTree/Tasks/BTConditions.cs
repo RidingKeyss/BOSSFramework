@@ -1,11 +1,9 @@
-﻿// BOSSFramework - BTConditions.cs
+﻿// BOSSFramework - BehaviorTree/Tasks/BTConditions.cs
 // Base and reusable condition nodes for blackboard-driven behavior trees
 
 using System.Collections;
 using UnityEngine;
-using Il2CppScheduleOne.NPCs;
-using Il2CppScheduleOne.PlayerScripts;
-using MelonLoader;
+using BOSSFramework.Shared;
 
 namespace BOSSFramework.BehaviorTree.Tasks
 {
@@ -32,18 +30,19 @@ namespace BOSSFramework.BehaviorTree.Tasks
 
         public override bool CheckCondition(BOSSBlackboard blackboard)
         {
-            var npc = blackboard.Get<NPC>("Self");
-            var player = blackboard.Get<Player>("Player");
+            var npc = blackboard.Get<INPC>("Self");
+            var player = blackboard.Get<IPlayer>("Player");
 
             if (npc == null || player == null)
             {
                 return false;
             }
 
-            float dist = Vector3.Distance(npc.transform.position, player.transform.position);
+            float dist = Vector3.Distance(npc.Transform.position, player.Transform.position);
             return dist <= _maxDistance;
         }
     }
+
     public class CooldownCondition : ConditionNode
     {
         private readonly string _key;

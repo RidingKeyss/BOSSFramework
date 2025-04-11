@@ -1,11 +1,10 @@
-﻿// BOSSFramework - BTTasks.cs
+﻿// BOSSFramework - BehaviorTree/Tasks/BTTasks.cs
 // Implements reusable TaskNodes for core NPC actions
 
 using System.Collections;
 using UnityEngine;
 using MelonLoader;
-using Il2CppScheduleOne.NPCs;
-using Il2CppScheduleOne.PlayerScripts;
+using BOSSFramework.Shared;
 
 namespace BOSSFramework.BehaviorTree.Tasks
 {
@@ -13,23 +12,23 @@ namespace BOSSFramework.BehaviorTree.Tasks
     {
         public override IEnumerator Execute(BOSSBlackboard blackboard, Action<NodeState> callback)
         {
-            var npc = blackboard.Get<NPC>("Self");
-            var target = blackboard.Get<Player>("Player");
-            if (npc == null || target == null)
+            var npc = blackboard.Get<INPC>("Self");
+            var target = blackboard.Get<Vector3>("Position");
+            if (npc == null || !blackboard.Has("Position"))
             {
                 callback(NodeState.Failure);
                 yield break;
             }
 
-            if (npc.Movement.CanMove())
+            if (npc.CanMove())
             {
-                if (npc.Movement.GetClosestReachablePoint(target.transform.position, out Vector3 reachable))
+                if (npc.GetClosestReachablePoint(target, out Vector3 reachable))
                 {
-                    npc.Movement.SetDestination(reachable);
-                    npc.Movement.ResumeMovement();
-                    MelonLogger.Msg($"[BOSSFramework] {npc.name} moving to {reachable}");
+                    npc.SetDestination(reachable);
+                    npc.ResumeMovement();
+                    MelonLogger.Msg($"[BOSSFramework] {npc.Name} moving to {reachable}");
 
-                    while (npc.Movement.IsMoving)
+                    while (npc.IsMoving)
                     {
                         callback(NodeState.Running);
                     }
@@ -39,15 +38,15 @@ namespace BOSSFramework.BehaviorTree.Tasks
                 }
                 else
                 {
-                    MelonLogger.Msg($"[BOSSFramework] {npc.name} could not find path to destination.");
+                    MelonLogger.Msg($"[BOSSFramework] {npc.Name} could not find path to destination.");
                 }
             }
             else
             {
-                if (npc.isInBuilding) npc.ExitBuilding();
+                if (npc.IsInBuilding) npc.ExitBuilding();
                 if (npc.IsInVehicle) npc.ExitVehicle();
-                npc.Movement.PauseMovement();
-                MelonLogger.Msg($"[BOSSFramework] {npc.name} cannot move.");
+                npc.PauseMovement();
+                MelonLogger.Msg($"[BOSSFramework] {npc.Name} cannot move.");
             }
 
             callback(NodeState.Failure);
@@ -67,20 +66,20 @@ namespace BOSSFramework.BehaviorTree.Tasks
 
         public override IEnumerator Execute(BOSSBlackboard blackboard, Action<NodeState> callback)
         {
-            var npc = blackboard.Get<NPC>("Self");
+            var npc = blackboard.Get<INPC>("Self");
             if (npc == null)
             {
                 callback(NodeState.Failure);
                 yield break;
             }
 
-            MelonLogger.Msg($"[BOSSFramework] {npc.name} saying '{_dialogue}' for {_duration} seconds");
-            var renderer = BOSSUtils.GetWorldspaceDialogueRenderer(npc);
+            MelonLogger.Msg($"[BOSSFramework] {npc.Name} saying '{_dialogue}' for {_duration} seconds");
+            var renderer = npc.GetDialogueRenderer();
             if (renderer != null)
             {
                 renderer.ShowText(_dialogue, _duration);
             }
-            try { npc.PlayVO(Il2CppScheduleOne.VoiceOver.EVOLineType.Acknowledge); } catch { }
+            try { npc.PlayVoiceLine(VoiceLineType.Acknowledge); } catch { }
             yield return null;
             callback(NodeState.Success);
         }
@@ -94,20 +93,20 @@ namespace BOSSFramework.BehaviorTree.Tasks
 
         public override IEnumerator Execute(BOSSBlackboard blackboard, Action<NodeState> callback)
         {
-            var npc = blackboard.Get<NPC>("Self");
+            var npc = blackboard.Get<INPC>("Self");
             if (npc == null)
             {
                 callback(NodeState.Failure);
                 yield break;
             }
 
-            MelonLogger.Msg($"[BOSSFramework] {npc.name} waiting (paused) for {_seconds} seconds");
+            MelonLogger.Msg($"[BOSSFramework] {npc.Name} waiting (paused) for {_seconds} seconds");
 
-            npc.Movement.PauseMovement();
+            npc.PauseMovement();
 
             yield return new WaitForSeconds(_seconds);
 
-            npc.Movement.ResumeMovement();
+            npc.ResumeMovement();
             callback(NodeState.Success);
         }
     }
@@ -120,25 +119,25 @@ namespace BOSSFramework.BehaviorTree.Tasks
 
         public override IEnumerator Execute(BOSSBlackboard blackboard, Action<NodeState> callback)
         {
-            var npc = blackboard.Get<NPC>("Self");
-            var target = blackboard.Get<NPC>("TargetNPC");
+            var npc = blackboard.Get<INPC>("Self");
+            var target = blackboard.Get<INPC>("TargetNPC");
             if (npc == null || target == null)
             {
                 callback(NodeState.Failure);
                 yield break;
             }
 
-            float dist = Vector3.Distance(npc.transform.position, target.transform.position);
+            float dist = Vector3.Distance(npc.Transform.position, target.Transform.position);
 
             if (dist > _distance)
             {
-                npc.Movement.SetDestination(target.transform.position);
-                npc.Movement.ResumeMovement();
+                npc.SetDestination(target.Transform.position);
+                npc.ResumeMovement();
                 callback(NodeState.Running); // Keep ticking this task
             }
             else
             {
-                npc.Movement.PauseMovement(); // Optional: stop if close enough
+                npc.PauseMovement(); // Optional: stop if close enough
                 callback(NodeState.Success);
             }
         }
@@ -154,8 +153,8 @@ namespace BOSSFramework.BehaviorTree.Tasks
 
         public override IEnumerator Execute(BOSSBlackboard blackboard, Action<NodeState> callback)
         {
-            var npc = blackboard.Get<NPC>("Self");
-            var player = blackboard.Get<Player>("Player");
+            var npc = blackboard.Get<INPC>("Self");
+            var player = blackboard.Get<IPlayer>("Player");
 
             if (npc == null || player == null)
             {
@@ -163,17 +162,17 @@ namespace BOSSFramework.BehaviorTree.Tasks
                 yield break;
             }
 
-            float dist = Vector3.Distance(npc.transform.position, player.transform.position);
+            float dist = Vector3.Distance(npc.Transform.position, player.Transform.position);
 
             if (dist > _distance)
             {
-                npc.Movement.SetDestination(player.transform.position);
-                npc.Movement.ResumeMovement();
+                npc.SetDestination(player.Transform.position);
+                npc.ResumeMovement();
                 callback(NodeState.Running); // Keep ticking this task
             }
             else
             {
-                npc.Movement.PauseMovement(); // Optional: stop if close enough
+                npc.PauseMovement(); // Optional: stop if close enough
                 callback(NodeState.Success);
             }
 

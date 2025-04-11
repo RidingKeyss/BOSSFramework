@@ -1,8 +1,8 @@
-﻿// BOSSFramework - BehaviorTree.cs
+﻿// BOSSFramework - BehaviorTree/BehaviorTree.cs
 // BehaviorTree container for modders to build and run custom logic per-NPC
 
 using System.Collections;
-using Il2CppScheduleOne.NPCs;
+using BOSSFramework.Shared;
 
 namespace BOSSFramework.BehaviorTree
 {
@@ -21,9 +21,9 @@ namespace BOSSFramework.BehaviorTree
         {
             while (_running)
             {
-                var npc = _blackboard.Get<NPC>("Self");
+                var npc = _blackboard.Get<INPC>("Self");
 
-                if (npc == null || npc.gameObject == null)
+                if (npc == null || npc.GameObject == null)
                     yield break;
 
                 bool finished = false;

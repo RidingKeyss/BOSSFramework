@@ -1,4 +1,4 @@
-﻿// BOSSFramework - BTBuilders.cs
+﻿// BOSSFramework - BehaviorTree/BTBuilders.cs
 // Builder pattern for cleanly constructing behavior tree node hierarchies
 
 namespace BOSSFramework.BehaviorTree
