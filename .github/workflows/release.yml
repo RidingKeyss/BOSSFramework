@@ -22,6 +22,5 @@ jobs:
         with:
           files: |
             dist/BOSSFramework.dll
-            dist/BOSSFrameworkSource.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
