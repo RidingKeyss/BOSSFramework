@@ -1,24 +1,24 @@
-﻿// BOSSUtils.cs
+﻿// BOSSFramework - BOSSUtils.cs
+// Helper utilities for difficult problems.
 using UnityEngine;
 using Il2CppScheduleOne.NPCs;
+using MelonLoader;
+using System.Collections;
 
 namespace BOSSFramework
 {
     public static class BOSSUtils
     {
+        public static Il2CppScheduleOne.NPCs.Behaviour.Behaviour IdleTemplate;
         public static Transform FindChildRecursive(Transform parent, string name)
         {
             for (int i = 0; i < parent.childCount; i++)
             {
                 Transform child = parent.GetChild(i);
-                //MelonLoader.MelonLogger.Msg($"[BOSSFramework] Searching child '{child.name}' of parent '{parent.name}'");
-
                 if (child.name == name)
                 {
-                    //MelonLoader.MelonLogger.Msg($"[BOSSFramework] Found child '{name}' under '{parent.name}'");
                     return child;
                 }
-
                 var result = FindChildRecursive(child, name);
                 if (result != null)
                     return result;
@@ -29,36 +29,23 @@ namespace BOSSFramework
 
         public static T FindComponentInChildren<T>(Transform parent, string childName) where T : Component
         {
-            //MelonLoader.MelonLogger.Msg($"[BOSSFramework] Looking for '{childName}' under '{parent.name}'");
             var child = FindChildRecursive(parent, childName);
             if (child != null)
             {
-                //MelonLoader.MelonLogger.Msg($"[BOSSFramework] Found child '{childName}', checking for component '{typeof(T).Name}'");
                 var component = child.GetComponent<T>();
                 if (component != null)
                 {
-                    //MelonLoader.MelonLogger.Msg($"[BOSSFramework] Found component '{typeof(T).Name}' on '{child.name}'");
                     return component;
                 }
-                else
-                {
-                    //MelonLoader.MelonLogger.Warning($"[BOSSFramework] Component '{typeof(T).Name}' not found on '{child.name}'");
-                }
-            }
-            else
-            {
-                //MelonLoader.MelonLogger.Warning($"[BOSSFramework] Child '{childName}' not found under '{parent.name}'");
             }
             return null;
         }
 
         public static Il2CppScheduleOne.UI.WorldspaceDialogueRenderer GetWorldspaceDialogueRenderer(NPC npc)
         {
-            //MelonLoader.MelonLogger.Msg($"[BOSSFramework] Searching for Spine2 on {npc.name}...");
             var spine2 = FindChildRecursive(npc.Avatar.BodyContainer.transform, "mixamorig:Spine2");
             if (spine2 != null)
             {
-                //MelonLoader.MelonLogger.Msg($"[BOSSFramework] Found Spine2 on {npc.name}: {spine2.name}");
                 var renderer = spine2.GetComponentInChildren<Il2CppScheduleOne.UI.WorldspaceDialogueRenderer>();
                 if (renderer != null)
                 {
@@ -72,5 +59,27 @@ namespace BOSSFramework
             }
             return null;
         }
-     }
+        public static void CacheIdleTemplate()
+        {
+            var npcs = GameObject.FindObjectsOfType<NPC>();
+            foreach (var npc in npcs)
+            {
+                foreach (var b in npc.behaviour.behaviourStack)
+                {
+                    if (b != null)
+                    {
+                        //MelonLogger.Msg($"[BOSSFramework] Found behaviour type: {b.GetIl2CppType().ToString()}");
+                        if (b.GetIl2CppType().Name == "StationaryBehaviour")
+                        {
+                            IdleTemplate = UnityEngine.Object.Instantiate(b);
+                            MelonLogger.Msg("[BOSSFramework] StationaryBehaviour template cloned and cached.");
+                            return;
+                        }
+                    }
+                }
+            }
+
+            MelonLogger.Warning("[BOSSFramework] Could not find any StationaryBehaviour to use as a fallback template.");
+        }
+    }
 }

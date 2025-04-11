@@ -462,10 +462,14 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+		<Compile Include="BehaviorTree\BehaviorTree.cs" />
+		<Compile Include="BehaviorTree\BTBuilders.cs" />
+		<Compile Include="BehaviorTree\BTNodes.cs" />
+		<Compile Include="BehaviorTree\Tasks\BTConditions.cs" />
 		<Compile Include="Utils\BehaviorRegistry.cs" />
 		<Compile Include="Utils\BOSSUtils.cs" />
-		<Compile Include="Common\CommonActions.cs" />
-		<Compile Include="Common\CommonBehaviors.cs" />
+		<Compile Include="BehaviorTree\Tasks\BTTasks.cs" />
+		<Compile Include="Examples\BTExampleTree.cs" />
 		<Compile Include="Core.cs" />
 	</ItemGroup>
 	

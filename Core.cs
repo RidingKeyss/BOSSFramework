@@ -1,10 +1,13 @@
-﻿// BOSSFramework - Schedule I Custom NPC Behavior Modding Framework
+﻿// BOSSFramework - Behavior Overlay System for Schedule One
 // Compatible with MelonLoader & Harmony - IL2CPP only
 
 using MelonLoader;
 using HarmonyLib;
 using Il2CppScheduleOne.Persistence;
-using Il2CppScheduleOne.DevUtilities;
+using Il2CppScheduleOne.PlayerScripts;
+using UnityEngine.Events;
+using Il2CppScheduleOne.NPCs;
+using UnityEngine;
 
 [assembly: MelonInfo(typeof(BOSSFramework.Core), "BOSSFramework", "1.0.0", "RidingKeys")]
 [assembly: MelonGame("TVGS", "Schedule I")]
@@ -18,27 +21,27 @@ namespace BOSSFramework
             LoggerInstance.Msg("BOSSFramework initialized. Ready for custom NPC behaviors.");
         }
 
-        [HarmonyPatch(typeof(GameManager), "Load")]
-        public static class GameManager_Load_Patch
-        {
-            public static void Postfix()
-            {
-                MelonLogger.Msg("[BOSSFramework] Registering behaviors.");
-
-                BehaviorRegistry.Register("MoveToRandom", CommonBehaviors.MoveToRandom, CommonBehaviors.StopMovement);
-                BehaviorRegistry.Register("FollowNearestNPC", CommonBehaviors.FollowNearestNPC, CommonBehaviors.StopMovement);
-                BehaviorRegistry.Register("FollowNearestPlayer", CommonBehaviors.FollowNearestPlayer, CommonBehaviors.StopMovement);
-            }
-        }
-
         [HarmonyPatch(typeof(LoadManager), "ExitToMenu")]
         public static class LoadManager_ExitToMenu_Patch
         {
             public static void Prefix()
             {
                 MelonLogger.Msg("[BOSSFramework] Exiting to menu — clearing custom behaviors.");
-                BehaviorRegistry.StopAll();
+                BehaviorRegistry.RemoveAll();
             }
+        }
+
+        void Start()
+        {
+            if (LoadManager.Instance != null)
+            {
+                LoadManager.Instance.onLoadComplete.AddListener((UnityAction)OnLoadComplete);
+            }
+        }
+
+        void OnLoadComplete()
+        {
+            BOSSUtils.CacheIdleTemplate();
         }
     }
 }
