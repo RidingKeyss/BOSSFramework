@@ -1,6 +1,6 @@
 # BOSSFramework
 
-**BOSSFramework** (Behavioral Overlay System for Schedule I) is a custom modding framework for [Schedule I](https://store.steampowered.com/app/2585950/Schedule_1/) built on **MelonLoader** and **Harmony**. It provides a reusable, extensible system for controlling NPC behavior via coroutine-based behavior trees that can be assigned, paused, or removed dynamically at runtime.
+**BOSSFramework** (Behavioral Overlay System for Schedule I) is a custom modding framework for [Schedule I](https://store.steampowered.com/app/3164500/Schedule_I/) built on **MelonLoader** and **Harmony**. It provides a reusable, extensible system for controlling NPC behavior via coroutine-based behavior trees that can be assigned, paused, or removed dynamically at runtime.
 
 ---
 
