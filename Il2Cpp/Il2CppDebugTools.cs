@@ -3,6 +3,7 @@
 
 using UnityEngine;
 using MelonLoader;
+using BOSSCoreShared;
 using Il2CppScheduleOne.NPCs;
 using Il2CppScheduleOne.PlayerScripts;
 
@@ -12,8 +13,11 @@ namespace BOSSIl2Cpp
     {
         public static void RegisterDebugKeys()
         {
-            MelonLogger.Msg("Debug Keys Registered.");
-            MelonCoroutines.Start(DebugKeyWatcher());
+            if (BOSSUtils.BackendHooks.DebugModeEnabled())
+            {
+                MelonLogger.Msg("Debug Keys Registered.");
+                MelonCoroutines.Start(DebugKeyWatcher());
+            }
         }
 
         private static System.Collections.IEnumerator DebugKeyWatcher()

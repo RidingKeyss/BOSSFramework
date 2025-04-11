@@ -11,6 +11,11 @@ namespace BOSSCoreShared
             public static IIdleTemplateProvider IdleTemplateProvider;
             public static bool IsIl2Cpp { get; set; }
             public static IBehaviorCloner? BehaviorCloner;
+            public static bool DebugModeEnabled()
+            {
+                return Environment.GetCommandLineArgs().Any(arg => arg.Equals("--bossdebug", StringComparison.OrdinalIgnoreCase));
+            }
+
         }
 
         public static IBehavior IdleTemplate;

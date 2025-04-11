@@ -8,6 +8,7 @@ using ScheduleOne.PlayerScripts;
 using BOSSFramework.Examples;
 using System.Collections;
 using BOSSMono;
+using BOSSCoreShared;
 
 namespace BOSSFramework.Mono
 {
@@ -15,8 +16,11 @@ namespace BOSSFramework.Mono
     {
         public static void RegisterDebugKeys()
         {
-            MelonLogger.Msg("Debug Keys Registered.");
-            MelonCoroutines.Start(DebugKeyWatcher());
+            if (BOSSUtils.BackendHooks.DebugModeEnabled())
+            {
+                MelonLogger.Msg("Debug Keys Registered.");
+                MelonCoroutines.Start(DebugKeyWatcher());
+            }
         }
 
         private static IEnumerator DebugKeyWatcher()
