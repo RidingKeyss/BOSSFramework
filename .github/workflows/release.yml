@@ -21,7 +21,7 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           files: |
-            path/to/BOSSFramework.dll
-            path/to/BOSSFrameworkSource.zip
+            dist/BOSSFramework.dll
+            dist/BOSSFrameworkSource.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
