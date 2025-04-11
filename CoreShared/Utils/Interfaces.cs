@@ -1,9 +1,8 @@
 ﻿// BOSSFramework - Utils/Interfaces.cs
 // Shared interfaces for dual IL2CPP and Mono compatibility
-using Il2CppFishNet.Transporting;
 using UnityEngine;
 
-namespace BOSSFramework.Shared
+namespace BOSSCoreShared
 {
     public interface INPC
     {
@@ -64,6 +63,10 @@ namespace BOSSFramework.Shared
         void EnableNetworked(object connection);
         void BeginNetworked(object connection);
         void EndNetworked(object connection);
+    }
+    public interface IBehaviorCloner
+    {
+        IBehavior Clone(IBehavior template, string name);
     }
 
     // Shared enum to abstract backend-specific VO types

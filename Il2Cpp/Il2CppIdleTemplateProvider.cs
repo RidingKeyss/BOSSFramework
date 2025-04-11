@@ -1,16 +1,16 @@
-﻿// IL2CPP implementation of IIdleTemplateProvider
-using UnityEngine;
+﻿// BOSSFramework - Il2CppIdleTemplateProvider.cs
+// IL2CPP implementation of IIdleTemplateProvider
 using Il2CppScheduleOne.NPCs;
-using BOSSFramework.Shared;
+using BOSSCoreShared;
 using MelonLoader;
 
-namespace BOSSFramework.Backends.Il2Cpp
+namespace BOSSIl2Cpp
 {
     public class Il2CppIdleTemplateProvider : IIdleTemplateProvider
     {
-        public IBehavior? GetIdleTemplate()
+        public IBehavior GetIdleTemplate()
         {
-            var npcs = GameObject.FindObjectsOfType<NPC>();
+            var npcs = UnityEngine.Object.FindObjectsOfType<NPC>();
             foreach (var npc in npcs)
             {
                 foreach (var b in npc.behaviour.behaviourStack)

@@ -1,11 +1,10 @@
 ﻿// BOSSFramework - Backends/Il2Cpp/Il2CppBehavior.cs
 // IL2CPP wrapper for Schedule I behaviors
-using BOSSFramework.Shared;
-using Il2CppPathfinding;
+using BOSSCoreShared;
 using Il2CppScheduleOne.NPCs.Behaviour;
 using MelonLoader;
 
-namespace BOSSFramework.Backends.Il2Cpp
+namespace BOSSIl2Cpp
 {
     public class Il2CppBehavior : IBehavior
     {
@@ -50,12 +49,12 @@ namespace BOSSFramework.Backends.Il2Cpp
                 Wrapped.End_Networked(netConn);
         }
 
-        public static Il2CppBehavior? FromInterface(IBehavior? behavior)
+        public static Il2CppBehavior FromInterface(IBehavior behavior)
         {
             return behavior as Il2CppBehavior;
         }
 
-        public static Behaviour? Unwrap(IBehavior? behavior)
+        public static Behaviour? Unwrap(IBehavior behavior)
         {
             return (behavior as Il2CppBehavior)?.Wrapped;
         }

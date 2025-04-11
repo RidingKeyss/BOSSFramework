@@ -3,31 +3,23 @@
 		<TargetFramework>net6.0</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>disable</Nullable>
-		<RootNamespace>BOSSFramework</RootNamespace>
+		<RootNamespace>BOSSIl2Cpp</RootNamespace>
 		<LangVersion>default</LangVersion>
 		<IsPackable>false</IsPackable>
 		<AssemblyVersion>1.0.0.0</AssemblyVersion>
 		<FileVersion>1.0.0.0</FileVersion>
 		<NeutralLanguage>en-US</NeutralLanguage>
-		<AssemblyName>BOSSFramework</AssemblyName>
+		<AssemblyName>BOSSIl2Cpp</AssemblyName>
 		<LangVersion>latest</LangVersion>
 		<ImplicitUsings>enable</ImplicitUsings>
 	</PropertyGroup>
-	
-	<ItemGroup>
-	  <EmbeddedResource Remove="CoreShared\**" />
-	  <EmbeddedResource Remove="dist\**" />
-	  <EmbeddedResource Remove="Il2Cpp\**" />
-	  <EmbeddedResource Remove="Mono\**" />
-	  <None Remove="CoreShared\**" />
-	  <None Remove="dist\**" />
-	  <None Remove="Il2Cpp\**" />
-	  <None Remove="Mono\**" />
-	</ItemGroup>
-	
+
 	<ItemGroup>
 		<Reference Include="Assembly-CSharp-firstpass">
 			<HintPath>D:\SteamLibrary\steamapps\common\Schedule I\MelonLoader\Il2CppAssemblies\Assembly-CSharp-firstpass.dll</HintPath>
+		</Reference>
+		<Reference Include="Assembly-CSharp">
+			<HintPath>D:\SteamLibrary\steamapps\common\Schedule I\MelonLoader\Il2CppAssemblies\Assembly-CSharp.dll</HintPath>
 		</Reference>
 		<Reference Include="Il2CppAeLa.EasyFeedback">
 			<HintPath>D:\SteamLibrary\steamapps\common\Schedule I\MelonLoader\Il2CppAssemblies\Il2CppAeLa.EasyFeedback.dll</HintPath>
@@ -178,9 +170,6 @@
 		</Reference>
 		<Reference Include="Il2Cpp__Generated">
 			<HintPath>D:\SteamLibrary\steamapps\common\Schedule I\MelonLoader\Il2CppAssemblies\Il2Cpp__Generated.dll</HintPath>
-		</Reference>
-		<Reference Include="Mono">
-		  <HintPath>D:\SteamLibrary\steamapps\common\Schedule I - Alternate\MelonLoader\Dependencies\SupportModules\Mono.dll</HintPath>
 		</Reference>
 		<Reference Include="Unity.AI.Navigation">
 			<HintPath>D:\SteamLibrary\steamapps\common\Schedule I\MelonLoader\Il2CppAssemblies\Unity.AI.Navigation.dll</HintPath>
@@ -473,28 +462,23 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+		<ProjectReference Include="..\CoreShared\CoreShared.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<Compile Include="Core.cs" />
+		<Compile Include="Il2CppBehavior.cs" />
+		<Compile Include="Il2CppBehaviorCloner.cs" />
+		<Compile Include="Il2CppDebugTools.cs" />
+		<Compile Include="Il2CppDialogueRenderer.cs" />
+		<Compile Include="Il2CppIdleTemplateProvider.cs" />
+		<Compile Include="Il2CppInitHooks.cs" />
+		<Compile Include="Il2CppNPC.cs" />
+		<Compile Include="Il2CppPlayer.cs" />
 	</ItemGroup>
 	
 	<Target Name="PostBuild" AfterTargets="PostBuildEvent">
 		<Exec Command="COPY &quot;$(TargetPath)&quot; &quot;D:\SteamLibrary\steamapps\common\Schedule I\Mods&quot;" />
+		<Exec Command="COPY &quot;$(TargetPath)&quot; &quot;..\dist&quot;" />
 	</Target>
-	
-	<ItemGroup>
-	  <EditorConfigFiles Remove="C:\Users\chris\source\repos\BOSSFramework\BOSSFramework\.editorconfig" />
-	</ItemGroup>
-	
-	<ItemGroup>
-	  <None Include="C:\Users\chris\source\repos\BOSSFramework\BOSSFramework\.editorconfig" />
-	</ItemGroup>
-
-	<ItemGroup>
-		<ProjectReference Include="..\BOSSFramework\Il2Cpp\Il2Cpp.csproj" />
-	</ItemGroup>
-	<ItemGroup>
-		<ProjectReference Include="..\BOSSFramework\Mono\Mono.csproj" />
-	</ItemGroup>
-	<ItemGroup>
-		<ProjectReference Include="..\BOSSFramework\CoreShared\CoreShared.csproj" />
-	</ItemGroup>
 </Project>

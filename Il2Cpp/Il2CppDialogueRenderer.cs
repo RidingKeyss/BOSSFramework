@@ -1,9 +1,9 @@
-﻿// BOSSFramework - Backends/Il2Cpp/Il2CppDialogueRenderer.cs
+﻿// BOSSFramework - Il2Cpp/Il2CppDialogueRenderer.cs
 // IL2CPP implementation of IDialogueRenderer
-using BOSSFramework.Shared;
+using BOSSCoreShared;
 using Il2CppScheduleOne.UI;
 
-namespace BOSSFramework.Backends.Il2Cpp
+namespace BOSSIl2Cpp
 {
     public class Il2CppDialogueRenderer : IDialogueRenderer
     {

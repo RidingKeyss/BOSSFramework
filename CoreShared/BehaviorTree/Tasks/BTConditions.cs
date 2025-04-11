@@ -3,7 +3,7 @@
 
 using System.Collections;
 using UnityEngine;
-using BOSSFramework.Shared;
+using BOSSCoreShared;
 
 namespace BOSSFramework.BehaviorTree.Tasks
 {

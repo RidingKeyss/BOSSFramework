@@ -2,7 +2,7 @@
 // BehaviorTree container for modders to build and run custom logic per-NPC
 
 using System.Collections;
-using BOSSFramework.Shared;
+using BOSSCoreShared;
 
 namespace BOSSFramework.BehaviorTree
 {

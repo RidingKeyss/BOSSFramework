@@ -1,11 +1,11 @@
-﻿// BOSSFramework - Backends/Il2Cpp/Il2CppNPC.cs
+﻿// BOSSFramework - Il2Cpp/Il2CppNPC.cs
 // IL2CPP Implementation of INPC for Schedule I
 using UnityEngine;
 using Il2CppScheduleOne.NPCs;
 using Il2CppScheduleOne.VoiceOver;
-using BOSSFramework.Shared;
+using BOSSCoreShared;
 
-namespace BOSSFramework.Backends.Il2Cpp
+namespace BOSSIl2Cpp
 {
     public class Il2CppNPC : INPC
     {
@@ -58,7 +58,7 @@ namespace BOSSFramework.Backends.Il2Cpp
             return renderer != null ? new Il2CppDialogueRenderer(renderer) : null;
         }
 
-        public IBehavior? ActiveBehavior
+        public IBehavior ActiveBehavior
         {
             get => _npc.behaviour.activeBehaviour as IBehavior;
             set => _npc.behaviour.activeBehaviour = Il2CppBehavior.Unwrap(value);
@@ -90,6 +90,6 @@ namespace BOSSFramework.Backends.Il2Cpp
                 _npc.behaviour.RemoveEnabledBehaviour(Il2CppBehavior.Unwrap(behavior));
         }
 
-        public object? LocalConnection => _npc.LocalConnection;
+        public object LocalConnection => _npc.LocalConnection;
     }
 }

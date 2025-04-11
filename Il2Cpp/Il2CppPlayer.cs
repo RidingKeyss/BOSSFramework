@@ -1,9 +1,9 @@
 ﻿// IL2CPP wrapper for Schedule I player objects
 using UnityEngine;
-using BOSSFramework.Shared;
+using BOSSCoreShared;
 using Il2CppScheduleOne.PlayerScripts;
 
-namespace BOSSFramework.Backends.Il2Cpp
+namespace BOSSIl2Cpp
 {
     public class Il2CppPlayer : IPlayer
     {

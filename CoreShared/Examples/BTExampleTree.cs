@@ -3,7 +3,7 @@
 
 using BOSSFramework.BehaviorTree;
 using BOSSFramework.BehaviorTree.Tasks;
-using BOSSFramework.Shared;
+using BOSSCoreShared;
 
 namespace BOSSFramework.Examples
 {

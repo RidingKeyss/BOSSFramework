@@ -1,15 +1,17 @@
-﻿// BOSSFramework - Backends/Il2Cpp/Il2CppDebugTools.cs
-// IL2CPP-only debug tools for development/testing
+﻿// BOSSFramework - Mono/MonoDebugTools.cs
+// Mono-only debug tools for development/testing
+
 using UnityEngine;
 using MelonLoader;
-using Il2CppScheduleOne.NPCs;
-using Il2CppScheduleOne.PlayerScripts;
-using BOSSFramework.Shared;
+using ScheduleOne.NPCs;
+using ScheduleOne.PlayerScripts;
 using BOSSFramework.Examples;
+using System.Collections;
+using BOSSMono;
 
-namespace BOSSFramework.Backends.Il2Cpp
+namespace BOSSFramework.Mono
 {
-    public static class Il2CppDebugTools
+    public static class MonoDebugTools
     {
         public static void RegisterDebugKeys()
         {
@@ -17,7 +19,7 @@ namespace BOSSFramework.Backends.Il2Cpp
             MelonCoroutines.Start(DebugKeyWatcher());
         }
 
-        private static System.Collections.IEnumerator DebugKeyWatcher()
+        private static IEnumerator DebugKeyWatcher()
         {
             while (true)
             {
@@ -33,7 +35,7 @@ namespace BOSSFramework.Backends.Il2Cpp
         {
             var npcs = GameObject.FindObjectsOfType<NPC>();
             var player = GameObject.FindObjectOfType<Player>();
-            if (player == null || npcs == null || npcs.Count == 0)
+            if (player == null || npcs == null || npcs.Length == 0)
                 return;
 
             var closestNpc = npcs
@@ -42,11 +44,10 @@ namespace BOSSFramework.Backends.Il2Cpp
 
             if (closestNpc == null) return;
 
-            var wrappedNpc = new Il2CppNPC(closestNpc);
+            var wrappedNpc = new MonoNPC(closestNpc);
+            var tree = BTExampleTree.Create(wrappedNpc, new MonoPlayer(player));
 
-            var tree = BTExampleTree.Create(wrappedNpc, new Il2CppPlayer(player));
-
-            BehaviorRegistry.Apply(wrappedNpc, tree, "FollowExampleTree");
+            BehaviorTree.BehaviorRegistry.Apply(wrappedNpc, tree, "FollowExampleTree");
 
             MelonLogger.Msg($"[BOSSFramework] Applied test behavior to NPC: {wrappedNpc.Name}");
         }

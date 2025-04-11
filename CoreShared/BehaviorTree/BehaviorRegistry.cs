@@ -1,17 +1,19 @@
 ﻿// BOSSFramework - BehaviorRegistry.cs
 // Manages direct application and cleanup of BehaviorTree instances on NPCs
 
+using BOSSCoreShared;
 using MelonLoader;
+using static BOSSCoreShared.BOSSUtils;
 
-namespace BOSSFramework.Shared
+namespace BOSSFramework.BehaviorTree
 {
     public static class BehaviorRegistry
     {
-        private static readonly Dictionary<INPC, BehaviorTree.BehaviorTree> _activeTrees = new();
+        private static readonly Dictionary<INPC, BehaviorTree> _activeTrees = new();
         private static readonly Dictionary<INPC, object> _activeCoroutines = new();
         private static readonly Dictionary<INPC, IBehavior> _activeBehaviours = new();
 
-        public static void Apply(INPC npc, BehaviorTree.BehaviorTree tree, string name = "BOSS_Tree")
+        public static void Apply(INPC npc, BehaviorTree tree, string name = "BOSS_Tree")
         {
             if (npc == null || tree == null)
             {
@@ -36,15 +38,13 @@ namespace BOSSFramework.Shared
 
             MelonLogger.Msg($"[BOSSFramework] Attempting to clone IdleTemplate of type: {template.GetType()}");
 
-
-            var unityTemplate = Backends.Il2Cpp.Il2CppBehavior.Unwrap(template);
-            if (unityTemplate == null)
+            if (BackendHooks.BehaviorCloner == null)
             {
-                MelonLogger.Error("[BOSSFramework] IdleTemplate could not be unwrapped to Unity object.");
+                MelonLogger.Error("[BOSSFramework] Cannot apply behavior — no BehaviorCloner registered.");
                 return;
             }
-            var cloned = new Backends.Il2Cpp.Il2CppBehavior(UnityEngine.Object.Instantiate(unityTemplate));
-            cloned.Name = name;
+
+            var cloned = BackendHooks.BehaviorCloner.Clone(template, name);
             npc.AddEnabledBehavior(cloned);
             npc.ActiveBehavior = cloned;
 
