@@ -62,7 +62,7 @@ namespace BOSSMono
             get
             {
                 var result = new List<IBehavior>();
-                var stack = MonoReflectionUtils.GetBehaviourStack(_npc.behaviour);
+                var stack = MonoReflectionUtils.GetBehaviourStack(_npc.behaviour, "enabledBehaviours");
                 if (stack == null) return result;
 
                 foreach (var b in stack)

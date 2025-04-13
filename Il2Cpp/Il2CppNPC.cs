@@ -69,7 +69,7 @@ namespace BOSSIl2Cpp
             get
             {
                 var result = new List<IBehavior>();
-                foreach (var b in _npc.behaviour.behaviourStack)
+                foreach (var b in _npc.behaviour.enabledBehaviours)
                 {
                     if (b != null)
                         result.Add(new Il2CppBehavior(b));

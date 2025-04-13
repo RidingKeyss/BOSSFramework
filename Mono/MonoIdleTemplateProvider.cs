@@ -14,7 +14,7 @@ namespace BOSSMono
             var npcs = GameObject.FindObjectsOfType<NPC>();
             foreach (var npc in npcs)
             {
-                var stack = MonoReflectionUtils.GetBehaviourStack(npc.behaviour);
+                var stack = MonoReflectionUtils.GetBehaviourStack(npc.behaviour, "behaviourStack");
                 if (stack == null) continue;
 
                 foreach (var b in stack)

@@ -46,10 +46,33 @@ namespace BOSSFramework.Examples
 
                 // Sequence 3: Do nothing (pure idle)
                 .WithSequence(
+                    new NestedTreeNode(BTNestedExampleTree.Create(npc, player)),
                     new WaitTask(0.5f)
                 )
 
                 .Build()
+            );
+
+            tree.GetBlackboard().Set("Self", npc);
+            tree.GetBlackboard().Set("Player", player);
+
+            return tree;
+        }
+    }
+
+    public static class BTNestedExampleTree
+    {
+        public static BehaviorTree.BehaviorTree Create(INPC npc, IPlayer player)
+        {
+            var tree = new BehaviorTree.BehaviorTree(
+                SequenceNodeBuilder.Start()
+                    .WithTask(new ConditionalTaskNode(
+                        new CooldownCondition("nested_intro", 5f),
+                        new SayTask("(nested) Let me tell you something...", 2f)
+                    ))
+                    .WithTask(new WaitTask(1f))
+                    .WithTask(new SayTask("(nested) ...and another thing!", 2f))
+                    .Build()
             );
 
             tree.GetBlackboard().Set("Self", npc);

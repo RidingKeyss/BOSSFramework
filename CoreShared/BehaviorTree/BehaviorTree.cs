@@ -42,6 +42,11 @@ namespace BOSSFramework.BehaviorTree
             }
         }
 
+        public IEnumerator RunAsNode(Action<NodeState> callback)
+        {
+            yield return _root.Execute(_blackboard, callback);
+        }
+
         public void Stop() => _running = false;
 
         public BOSSBlackboard GetBlackboard() => _blackboard;

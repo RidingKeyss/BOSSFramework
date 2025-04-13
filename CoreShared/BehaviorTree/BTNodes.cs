@@ -25,6 +25,15 @@ namespace BOSSFramework.BehaviorTree
         public T Get<T>(string key) => _data.TryGetValue(key, out var val) ? (T)val : default;
         public bool Has(string key) => _data.ContainsKey(key);
         public void Clear() => _data.Clear();
+
+        public void InheritFrom(BOSSBlackboard other)
+        {
+            foreach (var kv in other._data)
+            {
+                if (!_data.ContainsKey(kv.Key))
+                    _data[kv.Key] = kv.Value;
+            }
+        }
     }
 
     public class SequenceNode : BTNode
@@ -146,6 +155,28 @@ namespace BOSSFramework.BehaviorTree
             }
         }
     }
+
+    public class NestedTreeNode : TaskNode
+    {
+        private readonly BehaviorTree _nestedTree;
+
+        public NestedTreeNode(BehaviorTree nestedTree)
+        {
+            _nestedTree = nestedTree;
+        }
+
+        public override IEnumerator Execute(BOSSBlackboard blackboard, Action<NodeState> callback)
+        {
+            // Inject parent's blackboard into the nested tree
+            _nestedTree.GetBlackboard().InheritFrom(blackboard);
+
+            yield return _nestedTree.RunAsNode(result =>
+            {
+                callback(result);
+            });
+        }
+    }
+
 
     public abstract class TaskNode : BTNode { }
 }
