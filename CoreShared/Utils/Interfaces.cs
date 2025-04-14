@@ -1,5 +1,6 @@
 ﻿// BOSSFramework - Utils/Interfaces.cs
 // Shared interfaces for dual IL2CPP and Mono compatibility
+using ScheduleOne.Equipping;
 using UnityEngine;
 
 namespace BOSSCoreShared
@@ -39,6 +40,11 @@ namespace BOSSCoreShared
 
         //Avatar
         Transform AvatarRoot { get; }
+        IEquippable SetEquippable(string id);
+        IEquippable SetEquippableNetworked(object connection, string id);
+
+        //Custom attributes
+        float Accuracy { get; set; }
     }
 
 
@@ -83,4 +89,28 @@ namespace BOSSCoreShared
     {
         IBehavior? GetIdleTemplate();
     }
+    public interface IEquippable
+    {
+        string Path { get; }
+        GameObject GameObject { get; }
+    }
+
+    public interface IAvatarWeapon : IEquippable
+    {
+        void Attack();
+    }
+
+    public interface IAvatarMeleeWeapon : IAvatarWeapon
+    {
+        float AttackRadius { get; }
+        float AttackRange { get; }
+    }
+
+    public interface IAvatarRangedWeapon : IAvatarWeapon
+    {
+        bool IsPlayerInLoS(IPlayer player);
+        void SetIsRaised(bool isRaised);
+        void Shoot(Vector3 endPoint);
+    }
+
 }

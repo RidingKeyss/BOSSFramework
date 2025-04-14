@@ -4,12 +4,14 @@ using UnityEngine;
 using Il2CppScheduleOne.NPCs;
 using Il2CppScheduleOne.VoiceOver;
 using BOSSCoreShared;
+using Il2CppScheduleOne.AvatarFramework.Equipping;
 
 namespace BOSSIl2Cpp
 {
     public class Il2CppNPC : INPC
     {
         private readonly NPC _npc;
+        private float _accuracy = 0.5f;
 
         public Il2CppNPC(NPC npc)
         {
@@ -91,5 +93,13 @@ namespace BOSSIl2Cpp
         }
 
         public object LocalConnection => _npc.LocalConnection;
+
+        public IEquippable SetEquippable(string id) => new Il2CppEquippable(_npc.SetEquippable_Return(id));
+        public IEquippable SetEquippableNetworked(object connection, string id) => new Il2CppEquippable(_npc.SetEquippable_Networked_Return((Il2CppFishNet.Connection.NetworkConnection)connection, id));
+        public float Accuracy
+        {
+            get => _accuracy;
+            set => _accuracy = Mathf.Clamp01(value);
+        }
     }
 }

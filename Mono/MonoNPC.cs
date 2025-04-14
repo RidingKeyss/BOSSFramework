@@ -12,6 +12,7 @@ namespace BOSSMono
     public class MonoNPC : INPC
     {
         private readonly NPC _npc;
+        private float _accuracy = 0.5f;
 
         public MonoNPC(NPC npc)
         {
@@ -93,5 +94,25 @@ namespace BOSSMono
         }
 
         public object LocalConnection => _npc.LocalConnection;
+
+        public IEquippable SetEquippable(string id)
+        {
+            var method = _npc.Avatar.GetType().GetMethod("SetEquippable_Return", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+            var result = method?.Invoke(_npc.Avatar, new object[] { id });
+            return new MonoEquippable(result);
+        }
+
+        public IEquippable SetEquippableNetworked(object connection, string id)
+        {
+            var method = _npc.Avatar.GetType().GetMethod("SetEquippable_Networked_Return", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+            var result = method?.Invoke(_npc.Avatar, new object[] { connection, id });
+            return new MonoEquippable(result);
+        }
+
+        public float Accuracy
+        {
+            get => _accuracy;
+            set => _accuracy = Mathf.Clamp01(value);
+        }
     }
 }

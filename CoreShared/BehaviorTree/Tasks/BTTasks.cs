@@ -180,4 +180,54 @@ namespace BOSSFramework.BehaviorTree.Tasks
         }
     }
 
+    public class AttackTask : TaskNode
+    {
+        public override IEnumerator Execute(BOSSBlackboard blackboard, Action<NodeState> callback)
+        {
+            var npc = blackboard.Get<INPC>("Self");
+            var player = blackboard.Has("Player") ? blackboard.Get<IPlayer>("Player") : null;
+            var targetNpc = blackboard.Has("TargetNPC") ? blackboard.Get<INPC>("TargetNPC") : null;
+
+            if (npc == null)
+            {
+                callback(NodeState.Failure);
+                yield break;
+            }
+
+            var weapon = blackboard.Has("Weapon") ? blackboard.Get<IAvatarWeapon>("Weapon") : null;
+            if (weapon == null)
+            {
+                MelonLogger.Warning("[BOSSFramework] No weapon assigned on blackboard.");
+                callback(NodeState.Failure);
+                yield break;
+            }
+
+            if (weapon is IAvatarRangedWeapon ranged && player != null)
+            {
+                if (ranged.IsPlayerInLoS(player))
+                {
+                    ranged.SetIsRaised(true);
+
+                    float accuracy = Mathf.Clamp01(npc.Accuracy);
+                    float maxSpread = Mathf.Lerp(15f, 0.5f, accuracy);
+
+                    Vector3 spread = new Vector3(
+                        UnityEngine.Random.Range(-maxSpread, maxSpread),
+                        UnityEngine.Random.Range(-maxSpread, maxSpread),
+                        UnityEngine.Random.Range(-maxSpread, maxSpread)
+                    );
+
+                    Vector3 shotPosition = player.Transform.position + spread;
+
+                    ranged.Shoot(shotPosition);
+                    callback(NodeState.Success);
+                    yield break;
+                }
+            }
+
+            weapon.Attack();
+            yield return new WaitForSeconds(1f);
+            callback(NodeState.Success);
+        }
+    }
 }

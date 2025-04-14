@@ -471,6 +471,7 @@
 		<Compile Include="Il2CppBehaviorCloner.cs" />
 		<Compile Include="Il2CppDebugTools.cs" />
 		<Compile Include="Il2CppDialogueRenderer.cs" />
+		<Compile Include="Il2CppEquippable.cs" />
 		<Compile Include="Il2CppIdleTemplateProvider.cs" />
 		<Compile Include="Il2CppInitHooks.cs" />
 		<Compile Include="Il2CppNPC.cs" />
