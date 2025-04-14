@@ -1,6 +1,6 @@
 ﻿using MelonLoader;
 
-[assembly: MelonInfo(typeof(BOSSIl2Cpp.Core), "[BOSSFramework]BOSSIl2Cpp", "1.0.7", "chris", null)]
+[assembly: MelonInfo(typeof(BOSSIl2Cpp.Core), "[BOSSFramework]BOSSIl2Cpp", "1.0.7", "Ridingkeys", null)]
 [assembly: MelonGame("TVGS", "Schedule I")]
 
 namespace BOSSIl2Cpp

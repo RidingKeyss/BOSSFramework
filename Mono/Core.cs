@@ -1,6 +1,6 @@
 ﻿using MelonLoader;
 
-[assembly: MelonInfo(typeof(BOSSMono.Core), "[BOSSFramework]BOSSMono", "1.0.7", "chris", null)]
+[assembly: MelonInfo(typeof(BOSSMono.Core), "[BOSSFramework]BOSSMono", "1.0.7", "Ridingkeys", null)]
 [assembly: MelonGame("TVGS", "Schedule I")]
 
 namespace BOSSMono
